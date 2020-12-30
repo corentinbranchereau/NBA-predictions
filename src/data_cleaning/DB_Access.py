@@ -80,7 +80,7 @@ class DB_Access:
                     "$match":
                     {
                         "team_id" : team_id,
-                        "game.date" : { "$gt" : game_date},
+                        "game.date" : { "$lt" : game_date},
                         "player_id" : { "$in" : players_id}
                          
                     }
@@ -285,7 +285,7 @@ class DB_Access:
 
                         "fta":{"$avg":"$fta"},
 
-                        "ft_pct":{"$avg":"$ft_pct"},
+                        # "ft_pct":{"$avg":"$ft_pct"},
 
                         "orb":{"$avg":"$orb"},
 
@@ -407,7 +407,12 @@ class DB_Access:
         
     def get_players_stats_aggregate_before_game(self, team_id, game_date, game_id):
         players = self.get_players_stats_before_game( team_id, game_date, game_id )
+        injured = self.get_players_injured(team_id, game_id)
         for player in players:
+            player['injured'] = 0
+            for p in injured:
+                if(p['player_id'] == player['player_id']):
+                    player['injured'] = 1
             player.pop('_id',None)
             player.pop('player_id',None)
             player.pop('starting',None)

@@ -25,10 +25,9 @@ def create_games_and_players_stats_csv(db):
     print("getting games")
     games = db.get_games()
     indice = 0
-    f = open("games.csv", 'w')
+    f = open("games2020.csv", 'w')
     for game in games:
         print(indice)
-        indice += 1
         home_team = db.get_team(game['home_nick'])
         visitor_team = db.get_team(game['visitor_nick'])
 
@@ -38,9 +37,8 @@ def create_games_and_players_stats_csv(db):
         home_players = db.get_players_stats_aggregate_before_game(home_team['_id'], game['date'], game['_id'])
         visitor_players = db.get_players_stats_aggregate_before_game(visitor_team['_id'], game['date'], game['_id'])
 
-        empty_player = {'games_total': 6, 'games_not_played': 2.0, 'mp': 14.818888888888889, 'started': 0.0, 'fg': 1.6833333333333333, 'fga': 3.316666666666667, 'fg_pct': 0.48158620689655174, 'fg3': 0.0, 'fg3a': 0.03333333333333333, 'fg3_pct': 0.0, 'ft': 0.6666666666666666, 'fta': 0.8166666666666667, 'ft_pct': 0.7319130434782608, 'orb': 0.6166666666666667, 'drb': 1.1666666666666667, 'trb': 1.7833333333333334, 'ast': 1.8333333333333333, 'stl': 0.48333333333333334, 'blk': 0.4, 'tov': 0.5833333333333334, 'pf': 1.1, 'pts': 4.033333333333333, 'plus_minus': 0.6833333333333333, 'ts_pct': 0.5344655172413793, 'efg_pct': 0.48158620689655174, 'fg3a_per_fga_pct': 0.0115, 'fta_per_fga_pct': 0.30786206896551727, 'orb_pct': 4.428333333333333, 'drb_pct': 8.03, 'trb_pct': 6.291666666666667, 'ast_pct': 15.043333333333333, 'stl_pct': 1.5266666666666666, 'blk_pct': 2.0349999999999997, 'tov_pct': 13.816949152542374, 'usg_pct': 11.671666666666665, 'off_rtg': 0.0, 'def_rtg': 109.03333333333333, 'bpm': -1.005}
-
-   
+        empty_player = {'games_total': 2, 'games_not_played': 0.0, 'mp': 11.333333333333332, 'started': 0.0, 'fg': 1.0, 'fga': 4.5, 'fg_pct': 0.25, 'fg3': 0.5, 'fg3a': 3.5, 'fg3_pct': 0.1665, 'ft': 0.0, 'fta': 1.0, 'orb': 0.0, 'drb': 0.5, 'trb': 0.5, 'ast': 0.0, 'stl': 0.0, 'blk': 0.5, 'tov': 0.0, 'pf': 2.0, 'pts': 2.5, 'plus_minus': -2.0, 'ts_pct': 0.277, 'efg_pct': 0.3335, 'fg3a_per_fga_pct': 0.8335, 'fta_per_fga_pct': 0.3335, 'orb_pct': 0.0, 'drb_pct': 4.7, 'trb_pct': 2.5, 'ast_pct': 0.0, 'stl_pct': 0.0, 'blk_pct': 3.1, 'tov_pct': 0.0, 'usg_pct': 18.6, 'off_rtg': 0.0, 'def_rtg': 109.0, 'bpm': -12.6, 'injured': 0}
+        
         if(len(home_players) < 15):
             for i in range(0, 15-len(home_players)):
                 home_players.append(empty_player)
@@ -50,6 +48,28 @@ def create_games_and_players_stats_csv(db):
                 visitor_players.append(empty_player)
                 
         if(home_stats is not None) & (visitor_stats is not None) & (home_players is not None) & (visitor_players is not None):
+            #Ecriture des entêtes
+            if(indice == 0):
+                for h in home_stats:
+                    f.write( 'h_'+str(h) + ';')
+                
+              
+                for h in visitor_stats:
+                    f.write( 'v_'+str(h) + ';')
+                
+                hi=0
+                for player in home_players:
+                    hi +=1
+                    for h in player:
+                        f.write('h_'+str(h)+'_'+ str(hi) + ';')
+                hi =0
+                for player in visitor_players:
+                    hi+=1
+                    for h in player:
+                        f.write('v_'+str(h)+'_'+ str(hi) + ';')
+                f.write( "win" + '\n')
+                
+            # Ecriture des données
             for h in home_stats:
                 if(home_stats[h] is None):
                     print(h,'home_stat')
@@ -73,10 +93,12 @@ def create_games_and_players_stats_csv(db):
                     f.write( str(player[h]) + ';')
 
             f.write( str(game['winner']) + '\n')
+            indice += 1
+        
             
+    f.close()
 
-
-db = DB_Access("2019")
+db = DB_Access("2020")
 # get_games_with_stats(db)
 # games = db.get_games()
 # team = db.get_team(games[10]['home_nick'])

@@ -1,33 +1,78 @@
 import keras
 import numpy as np
 import tensorflow as tf
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
+
+
+def main():
+    # the data, split between train and test sets
+    df=pd.read_csv("games2018-2019.csv",header=0, sep=';')
+    y = df.pop('win')
+    X = df
+    epoch = 10
+
+    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
+    # split into input (X) and output (Y) variables
+    # df = clean_dataset(df)
+    # X_train=df[:2000,0:1152]
+    # y_train=df[:2000,1152]
+    # X_test=df[2000:,0:1152]
+    # y_test=df[2000:,1152]
+
+    mean = 0
+    for i in range(0,10):
+        print(i)
+        history = train_model(X_train, y_train, X_test, y_test, epoch)
+        history_df = pd.DataFrame(history.history)
+        mean += history_df['val_accuracy'][epoch-1] 
+        print("val_accuracy: ", history_df['val_accuracy'][epoch-1] )
+    print("mean accuracy: ", mean/10)
+    # # use Pandas native plot method
+    #history_df.loc[0:, ['loss', 'val_loss']].plot()
+
+    #plt.show()
+
+
+def clean_dataset(dataset):
+
+# demonstrate data normalization with sklearn
+    # create scaler
+    scaler = MinMaxScaler()
+    # fit scaler on data
+    scaler.fit(dataset)
+    # apply transform
+    normalized = scaler.transform(dataset)
+    # inverse transform
+    # inverse = scaler.inverse_transform(normalized)
+    # print(normalized)
+    return normalized
 
 
 
-# the data, split between train and test sets
-dataset=np.loadtxt("games2.csv",delimiter=";")
-# split into input (X) and output (Y) variables
-X_train=dataset[:500,0:1152]
-Y_train=dataset[:500,1152]
-X_test=dataset[500:,0:1152]
-Y_test=dataset[500:,1152]
+def train_model(X_train, Y_train, X_test, Y_test, epoch):
+
+    model = tf.keras.models.Sequential()  # a basic feed-forward model
+    # model.add(tf.keras.layers.BatchNormalization())
+   
+    model.add(tf.keras.layers.Dense(32, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+    # model.add(tf.keras.layers.Dense(32, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+    # model.add(tf.keras.layers.Dropout(rate=0.1))
+    model.add(tf.keras.layers.Dense(16, activation=tf.nn.relu))
+    # model.add(tf.keras.layers.Dropout(rate=0.05))
+    model.add(tf.keras.layers.Dense(16))
+    model.add(tf.keras.layers.Dense(1, activation=tf.nn.sigmoid))  # our output layer. 10 units for 10 classes. Softmax for probability distribution
+
+    model.compile(optimizer='adam',  # Good default optimizer to start with
+                loss='binary_crossentropy',  # how will we calculate our "error." Neural network aims to minimize loss.
+                metrics=['accuracy'])  # what to track
+
+    history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=120, verbose=False)  # train the model
+
+    return history
 
 
 
-model = tf.keras.models.Sequential()  # a basic feed-forward model
-# model.add(tf.keras.layers.Flatten())  # takes our 28x28 and makes it 1x784
-model.add(tf.keras.layers.Dense(64, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
-model.add(tf.keras.layers.Dense(64, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
-model.add(tf.keras.layers.Dense(32, activation=tf.nn.relu))
-
-model.add(tf.keras.layers.Dense(1, activation=tf.nn.sigmoid))  # our output layer. 10 units for 10 classes. Softmax for probability distribution
-
-model.compile(optimizer='adam',  # Good default optimizer to start with
-              loss='binary_crossentropy',  # how will we calculate our "error." Neural network aims to minimize loss.
-              metrics=['accuracy'])  # what to track
-
-model.fit(X_train, Y_train, epochs=20)  # train the model
-
-val_loss, val_acc = model.evaluate(X_test, Y_test)  # evaluate the out of sample data with model
-print("loss: ",  val_loss)  # model's loss (error)
-print("accuracy: ", val_acc)  # model's accuracy
+main()
