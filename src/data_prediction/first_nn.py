@@ -9,12 +9,12 @@ from sklearn.model_selection import train_test_split
 
 def main():
     # the data, split between train and test sets
-    df=pd.read_csv("games2018-2019.csv",header=0, sep=';')
+    df=pd.read_csv("games2020.csv",header=0, sep=';')
     y = df.pop('win')
     X = df
-    epoch = 10
+    epoch = 20
 
-    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
+    
     # split into input (X) and output (Y) variables
     # df = clean_dataset(df)
     # X_train=df[:2000,0:1152]
@@ -24,16 +24,17 @@ def main():
 
     mean = 0
     for i in range(0,10):
+        X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3)
         print(i)
         history = train_model(X_train, y_train, X_test, y_test, epoch)
         history_df = pd.DataFrame(history.history)
         mean += history_df['val_accuracy'][epoch-1] 
         print("val_accuracy: ", history_df['val_accuracy'][epoch-1] )
+        # use Pandas native plot method
+        history_df.loc[0:, ['loss', 'val_loss']].plot()
     print("mean accuracy: ", mean/10)
-    # # use Pandas native plot method
-    #history_df.loc[0:, ['loss', 'val_loss']].plot()
 
-    #plt.show()
+    plt.show()
 
 
 def clean_dataset(dataset):
@@ -59,7 +60,7 @@ def train_model(X_train, Y_train, X_test, Y_test, epoch):
    
     model.add(tf.keras.layers.Dense(32, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
     # model.add(tf.keras.layers.Dense(32, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
-    # model.add(tf.keras.layers.Dropout(rate=0.1))
+    # model.add(tf.keras.layers.Dropout(rate=0.3))
     model.add(tf.keras.layers.Dense(16, activation=tf.nn.relu))
     # model.add(tf.keras.layers.Dropout(rate=0.05))
     model.add(tf.keras.layers.Dense(16))

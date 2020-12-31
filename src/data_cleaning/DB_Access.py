@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import datetime
 import os
 
 class DB_Access:
@@ -48,8 +49,8 @@ class DB_Access:
             'game_id' : game_id,
             'team_id' : team_id,
             '$and' : [
-                {'stats.reason' : { "$ne":"Did Not Play"}},
-                {'stats.reason' : { "$ne":"Did Not Dress"}},
+                # {'stats.reason' : { "$ne":"Did Not Play"}},
+                # {'stats.reason' : { "$ne":"Did Not Dress"}},
                 {'stats.reason' : { "$exists":"true"}}
             ]
         })
@@ -418,3 +419,398 @@ class DB_Access:
             player.pop('starting',None)
      
         return players
+
+
+ ####
+ #
+ #  TRY NEW AGGREGATION 
+ #
+ #
+ #####
+
+    def get_players_grades(self, team_id, game_date, game_id ):
+        
+        players = list(self.table_player_stats.find({
+            "game_id":game_id,
+            "team_id":team_id,
+            
+        }).sort('stats.started', -1))
+        players_id = []
+        for player in players:
+            players_id.append(player['player_id'])
+
+        time_delta = datetime.timedelta(20)
+        minimum_date = game_date - time_delta;
+
+        items = self.table_player_stats.aggregate(pipeline = [
+              {
+                    "$lookup":
+                    {
+                        "from": "game",
+                        "localField": "game_id",
+                        "foreignField": "_id",
+                        "as": "game"
+                    }
+                }, 
+                {
+                    "$match":
+                    {
+                        "team_id" : team_id,
+                        "player_id" : { "$in" : players_id},
+                        "$and" : [
+                            { "game.date": { "$lt" : game_date}},
+                            { "game.date": { "$gt" : minimum_date}}
+                        ],
+                         
+                    }
+                },
+                {
+                    "$project": {
+                        "_id": 1,
+                        "player_id":1,
+                        "game_id":1,
+                        "game":1,
+                        "team_id":1,
+                        # "stats":1,
+                        "player_name" : "$stats.name",
+                        # "total": {  
+                        #     "$cond": [ { "$gte": [ 1, 0 ] }, 1, 0]
+                        # },
+                        # "mp":{  
+                        #     "$cond": [ { "$gte": [ "$stats.mp", 0 ] }, "$stats.mp", 0.0]
+                        # },
+                        "started":{  
+                            "$cond": [ { "$gte": [ "$stats.started", 0 ] }, "$stats.started", 0.0]
+                        },
+                        # "fg":{  
+                        #     "$cond": [ { "$gte": [ "$stats.fg", 0 ] }, "$stats.fg", 0.0]
+                        # },
+                        # "DidNotPlay": {  
+                        #     "$cond": [ {"$ifNull": ['$stats.reason', 0]}, 1.0, 0.0]
+                        # },
+                        # "fga": {  
+                        #     "$cond": [ { "$gte": [ "$stats.fga", 0 ] }, "$stats.fga", 0.0]
+                        # },
+                 
+                        # "fg_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.fg_pct", 0 ] }, "$stats.fg_pct", 0.0]
+                        # },
+                        
+                        # "fg3":{  
+                        #     "$cond": [ { "$gte": [ "$stats.fg3", 0 ] }, "$stats.fg3", 0.0]
+                        # },
+                    
+                        # "fg3a":{  
+                        #     "$cond": [ { "$gte": [ "$stats.fg3a", 0 ] }, "$stats.fg3a", 0.0]
+                        # },
+
+                        # "fg3_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.fg3_pct", 0 ] }, "$stats.fg3_pct", 0.0]
+                        # },
+
+                        # "ft":{  
+                        #     "$cond": [ { "$gte": [ "$stats.ft", 0 ] }, "$stats.ft", 0.0]
+                        # },
+
+                        # "fta":{  
+                        #     "$cond": [ { "$gte": [ "$stats.fta", 0 ] }, "$stats.fta", 0.0]
+                        # },
+
+                        # "ft_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.ft_pct", 0 ] }, "$stats.ft_pct", 0.0]
+                        # },
+
+                        # "orb":{  
+                        #     "$cond": [ { "$gte": [ "$stats.orb", 0 ] }, "$stats.orb", 0.0]
+                        # },
+
+                        # "drb":{  
+                        #     "$cond": [ { "$gte": [ "$stats.drb", 0 ] }, "$stats.drb", 0.0]
+                        # },
+
+                        # "trb":{  
+                        #     "$cond": [ { "$gte": [ "$stats.trb", 0 ] }, "$stats.trb", 0.0]
+                        # },
+
+                        # "ast":{  
+                        #     "$cond": [ { "$gte": [ "$stats.ast", 0 ] }, "$stats.ast", 0.0]
+                        # },
+
+                        # "stl":{  
+                        #     "$cond": [ { "$gte": [ "$stats.stl", 0 ] }, "$stats.stl", 0.0]
+                        # },
+
+                        # "blk":{  
+                        #     "$cond": [ { "$gte": [ "$stats.blk", 0 ] }, "$stats.blk", 0.0]
+                        # },
+
+                        # "tov":{  
+                        #     "$cond": [ { "$gte": [ "$stats.tov", 0 ] }, "$stats.tov", 0.0]
+                        # },
+
+                        # "pf":{  
+                        #     "$cond": [ { "$gte": [ "$stats.pf", 0 ] }, "$stats.pf", 0.0]
+                        # },
+
+                        "pts":{  
+                            "$cond": [ { "$gte": [ "$stats.pts", 0 ] }, "$stats.pts", 0.0]
+                        },
+
+                        "plus_minus": {"$convert":
+                                {
+                                    "input": "$stats.plus_minus",
+                                    "to": "double",
+                                    "onError": 0,  
+                                    "onNull":0    
+                                }
+
+                             },
+
+                        # "ts_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.ts_pct", 0 ] }, "$stats.ts_pct", 0.0]
+                        # },
+
+                        # "efg_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.efg_pct", 0 ] }, "$stats.efg_pct", 0.0]
+                        # },
+
+                        # "fg3a_per_fga_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.fg3a_per_fga_pct", 0 ] }, "$stats.fg3a_per_fga_pct", 0.0]
+                        # },
+
+                        # "fta_per_fga_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.fta_per_fga_pct", 0 ] }, "$stats.fta_per_fga_pct", 0.0]
+                        # },
+
+                        # "orb_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.orb_pct", 0 ] }, "$stats.orb_pct", 0.0]
+                        # },
+
+                        # "drb_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.drb_pct", 0 ] }, "$stats.drb_pct", 0.0]
+                        # },
+
+                        # "trb_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.trb_pct", 0 ] }, "$stats.trb_pct", 0.0]
+                        # },
+
+                        # "ast_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.ast_pct", 0 ] }, "$stats.ast_pct", 0.0]
+                        # },
+
+                        # "stl_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.stl_pct", 0 ] }, "$stats.stl_pct", 0.0]
+                        # },
+
+                        # "blk_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.blk_pct", 0 ] }, "$stats.blk_pct", 0.0]
+                        # },
+
+                        # "tov_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.tov_pct", 0 ] }, "$stats.tov_pct", 0.0]
+                        # },
+
+                        # "usg_pct":{  
+                        #     "$cond": [ { "$gte": [ "$stats.usg_pct", 0 ] }, "$stats.usg_pct", 0.0]
+                        # },
+
+                        # "off_rtg":{  
+                        #     "$cond": [ { "$gte": [ "$stats.off_pct", 0 ] }, "$stats.off_pct", 0.0]
+                        # },
+
+                        # "def_rtg":{  
+                        #     "$cond": [ { "$gte": [ "$stats.def_rtg", 0 ] }, "$stats.def_rtg", 0.0]
+                        # },
+
+                        "bpm": {
+                            "$convert":
+                                {
+                                    "input": "$stats.bpm",
+                                    "to": "double",
+                                    "onError": 0,  
+                                    "onNull":0    
+                                }
+                            }
+                    }         
+                },
+                {
+                    "$group":
+                    {
+                        "_id" : "$player_name",
+
+                        "player_id" : {"$first": "$player_id"},
+
+                        # "games_total":  {'$sum':'$total'},
+
+                        # "games_not_played" : {"$sum":"$DidNotPlay"},
+
+                        # "mp" :  {"$avg":"$mp"},
+
+                        "started" :  {"$avg":"$started"},
+
+                        # "fg" :  {"$avg":"$fg"},
+
+                        # "fga": {"$avg":"$fga"},
+                 
+                        # "fg_pct":{"$avg":"$fg_pct"},
+                        
+                        # "fg3":{"$avg":"$fg3"},
+                    
+                        # "fg3a":{"$avg":"$fg3a"},
+
+                        # "fg3_pct":{"$avg":"$fg3_pct"},
+
+                        # "ft":{"$avg":"$ft"},
+
+                        # "fta":{"$avg":"$fta"},
+
+                        # # "ft_pct":{"$avg":"$ft_pct"},
+
+                        # "orb":{"$avg":"$orb"},
+
+                        # "drb":{"$avg":"$drb"},
+
+                        # "trb":{"$avg":"$trb"},
+
+                        # "ast":{"$avg":"$ast"},
+
+                        # "stl":{"$avg":"$stl"},
+
+                        # "blk":{"$avg":"$blk"},
+
+                        # "tov":{"$avg":"$tov"},
+
+                        # "pf":{"$avg":"$pf"},
+
+                        "pts":{"$avg":"$pts"},
+
+                        "plus_minus":{"$avg":"$plus_minus"},
+
+                        # "ts_pct":{"$avg":"$ts_pct"},
+
+                        # "efg_pct":{"$avg":"$efg_pct"},
+
+                        # "fg3a_per_fga_pct":{"$avg":"$fg3a_per_fga_pct"},
+
+                        # "fta_per_fga_pct":{"$avg":"$fta_per_fga_pct"},
+
+                        # "orb_pct":{"$avg":"$orb_pct"},
+
+                        # "drb_pct":{"$avg":"$drb_pct"},
+
+                        # "trb_pct":{"$avg":"$trb_pct"},
+
+                        # "ast_pct":{"$avg":"$ast_pct"},
+
+                        # "stl_pct":{"$avg":"$stl_pct"},
+
+                        # "blk_pct":{"$avg":"$blk_pct"},
+
+                        # "tov_pct":{"$avg":"$tov_pct"},
+
+                        # "usg_pct":{"$avg":"$usg_pct"},
+
+                        # "off_rtg":{"$avg":"$off_rtg"},
+
+                        # "def_rtg":{"$avg":"$def_rtg"},
+
+                        "bpm":{"$avg":"$bpm"},
+                    },
+                    
+                }
+                
+        ])
+        players_stats = list(items)
+
+        for item in players_stats:
+            for player in players:
+                if(item['player_id'] == player['player_id']):
+                    item['starting'] = player['stats']['started']
+        newlist = sorted(players_stats, key=lambda k: k['starting'], reverse=True) 
+        return list(newlist)
+
+
+    def get_players_grades_aggregate(self, team_id, game_date, game_id):
+        players = self.get_players_grades( team_id, game_date, game_id )
+        injured = self.get_players_injured(team_id, game_id)
+        for player in players:
+            player['injured'] = 0.01
+            for p in injured:
+                if(p['player_id'] == player['player_id']):
+                    player['injured'] = 0.99
+            player.pop('_id',None)
+            player.pop('player_id',None)
+            player.pop('starting',None)
+            player.pop('started',None)
+     
+        return players
+
+
+
+    def get_same_game_previous_stats(self,game_date,home_nick,visitor_nick):
+        games = self.table_game.find({
+            '$or' :[
+                {
+                    "home_nick" : home_nick,
+                    "visitor_nick" : visitor_nick,
+                    "date" : {"$lt":game_date }
+                },
+                 {
+                    "home_nick" : visitor_nick,
+                    "visitor_nick" : home_nick,
+                    "date" : {"$lt":game_date }
+                },
+            ]
+        })
+       
+        aggregate = {
+            'nb_game':0,
+            'nb_win':0,
+            'nb_loose':0,
+            'avg_points':0,
+            'avg_diff':0,
+        }
+        for game in games:
+            if(game['home_nick'] == home_nick):
+                aggregate['avg_points'] += game['home_pts']
+                aggregate['avg_diff'] += game['home_pts'] - game['visitor_pts']
+
+                if(game['home_pts']>game['visitor_pts']):
+                    aggregate['nb_win'] += 1
+
+                elif(game['home_pts']<game['visitor_pts']):
+                    aggregate['nb_loose'] += 1
+                    
+
+            elif(game['visitor_nick'] == home_nick):
+                aggregate['avg_points'] += game['visitor_pts']
+                aggregate['avg_diff'] += game['visitor_pts'] - game['home_pts']
+                
+
+                if(game['home_pts']<game['visitor_pts']):
+                    aggregate['nb_win'] += 1
+
+                elif(game['home_pts']>game['visitor_pts']):
+                    aggregate['nb_loose']+= 1
+
+
+            aggregate['nb_game'] += 1 
+        #for end
+        if(aggregate['nb_game'] > 0):
+            aggregate['avg_points'] = aggregate['avg_points'] / aggregate['nb_game'] 
+            aggregate['avg_diff'] = aggregate['avg_diff'] / (aggregate['nb_game'] * 40) # on normalise en considérant 40 comme le max de diff 
+            aggregate['win_avg'] = aggregate['nb_win'] + 0.01 / aggregate['nb_game'] #(pas très grave si le max est en réalité supérieur)
+
+            aggregate.pop('nb_game')
+            aggregate.pop('nb_win')
+            aggregate.pop('nb_loose')
+            
+        else:
+            aggregate['avg_points'] = 100 
+            aggregate['avg_diff'] = 0
+            aggregate['win_avg'] = 0.5
+
+            aggregate.pop('nb_game')
+            aggregate.pop('nb_win')
+            aggregate.pop('nb_loose')
+        return aggregate
