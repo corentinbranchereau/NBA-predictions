@@ -14,14 +14,6 @@ def main():
     X = df
     epoch = 30
 
-
-    # split into input (X) and output (Y) variables
-    # df = clean_dataset(df)
-    # X_train=df[:2000,0:1152]
-    # y_train=df[:2000,1152]
-    # X_test=df[2000:,0:1152]
-    # y_test=df[2000:,1152]
-
     mean = 0
     for i in range(0,20):
     # if(True):
@@ -52,8 +44,8 @@ def clean_dataset(dataset):
     # print(normalized)
     return normalized
 
-
-def train_model_dataset_2(X_train, Y_train, X_test, Y_test, epoch):
+#model that best fits 2nd data scrapping. 
+def train_model_dataset_2(X_train, Y_train, X_test, Y_test, epoch = 10):
 
     model = tf.keras.models.Sequential()  # a basic feed-forward model
     # model.add(tf.keras.layers.BatchNormalization())
@@ -72,11 +64,11 @@ def train_model_dataset_2(X_train, Y_train, X_test, Y_test, epoch):
                 metrics=['accuracy'])  # what to track
 
     history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=60)  # train the model
-    
+    model.save("model.h5")
     return history
 
-
-def train_model_dataset_3(X_train, Y_train, X_test, Y_test, epoch):
+#model that best  fits 3rd data scrapping 
+def train_model_dataset_3(X_train, Y_train, X_test, Y_test, epoch = 10):
 
     model = tf.keras.models.Sequential()  # a basic feed-forward model
     # model.add(tf.keras.layers.BatchNormalization())
@@ -95,12 +87,12 @@ def train_model_dataset_3(X_train, Y_train, X_test, Y_test, epoch):
 
     history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=120, verbose=False)  # train the model
     history_df = pd.DataFrame(history.history)
-    if(history_df['val_accuracy'][epoch-1]>0.65):
-        model.save("model.h5")
+    model.save("model.h5")
+
     return history
 
-
-def train_model_dataset_4(X_train, Y_train, X_test, Y_test, epoch):
+#model that best  fits 4th data scrapping 
+def train_model_dataset_4(X_train, Y_train, X_test, Y_test, epoch = 30):
 
     model = tf.keras.models.Sequential()  # a basic feed-forward model
     # model.add(tf.keras.layers.BatchNormalization())
