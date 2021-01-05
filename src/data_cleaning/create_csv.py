@@ -102,84 +102,89 @@ def create_games_and_players_stats_csv_2(db,year):
     print("getting games")
     games = db.get_games()
     indice = 0
-    f = open("games"+year+".csv", 'w')
+    f = open("games"+year+".csv", 'a')
     for game in games:
-        print(indice)
-        home_team = db.get_team(game['home_nick'])
-        visitor_team = db.get_team(game['visitor_nick'])
+        if(indice > 786):
+            print(indice)
+            home_team = db.get_team(game['home_nick'])
+            visitor_team = db.get_team(game['visitor_nick'])
 
-        home_stats = db.get_team_stats_aggregate_before_game(game['home_nick'], game['date'])
-        visitor_stats = db.get_team_stats_aggregate_before_game(game['visitor_nick'], game['date'])
+            home_stats = db.get_team_stats_aggregate_before_game(game['home_nick'], game['date'])
+            visitor_stats = db.get_team_stats_aggregate_before_game(game['visitor_nick'], game['date'])
 
-        home_players = db.get_players_grades_aggregate(home_team['_id'], game['date'], game['_id'])
-        visitor_players = db.get_players_grades_aggregate(visitor_team['_id'], game['date'], game['_id'])
+            home_players = db.get_players_grades_aggregate(home_team['_id'], game['date'], game['_id'])
+            visitor_players = db.get_players_grades_aggregate(visitor_team['_id'], game['date'], game['_id'])
 
-        previous_games = db.get_same_game_previous_stats(game['date'],game['home_nick'], game['visitor_nick'])
-        
+            previous_games = db.get_same_game_previous_stats(game['date'],game['home_nick'], game['visitor_nick'])
+            
 
-        empty_player = {'pts': 0.0, 'plus_minus': 0.0, 'bpm': 0.0, 'injured': 1}
+            empty_player = {'pts': 0.0, 'plus_minus': 0.0, 'bpm': 0.0, 'injured': 1}
 
-        if(len(home_players) < 15):
-            for i in range(0, 15-len(home_players)):
-                home_players.append(empty_player)
-        
-        if(len(visitor_players) < 15):
-            for j in range(0, 15-len(visitor_players)):
-                visitor_players.append(empty_player)
+            if(len(home_players) < 15):
+                for i in range(0, 15-len(home_players)):
+                    home_players.append(empty_player)
+            
+            if(len(visitor_players) < 15):
+                for j in range(0, 15-len(visitor_players)):
+                    visitor_players.append(empty_player)
+                    
+            if(home_stats is not None) & (visitor_stats is not None) & (home_players is not None) & (visitor_players is not None):
+                #Ecriture des entêtes
+                if(indice == 0):
+                    f.write('home_elo_probability' + ';')
+
+                    for h in home_stats:
+                        f.write( 'h_'+str(h) + ';')
+                    
                 
-        if(home_stats is not None) & (visitor_stats is not None) & (home_players is not None) & (visitor_players is not None):
-            #Ecriture des entêtes
-            if(indice == 0):
+                    for h in visitor_stats:
+                        f.write( 'v_'+str(h) + ';')
+
+                    for h in previous_games:
+                        f.write( 'v_'+str(h) + ';')
+                    
+                    hi=0
+                    for player in home_players:
+                        hi +=1
+                        for h in player:
+                            f.write('h_'+str(h)+'_'+ str(hi) + ';')
+                    hi =0
+                    for player in visitor_players:
+                        hi+=1
+                        for h in player:
+                            f.write('v_'+str(h)+'_'+ str(hi) + ';')
+                    f.write( "win" + '\n')
+                    
+                # Ecriture des données
+                f.write( str(game['home_win_probability']) + ';')
+
                 for h in home_stats:
-                    f.write( 'h_'+str(h) + ';')
-                
-              
+                    if(home_stats[h] is None):
+                        print(h,'home_stat')
+                    f.write( str(home_stats[h]) + ';')
+                    
                 for h in visitor_stats:
-                    f.write( 'v_'+str(h) + ';')
-
+                    if(visitor_stats[h] is None):
+                        print(h, 'visitor stat')
+                    f.write( str(visitor_stats[h]) + ';')
+                
                 for h in previous_games:
-                    f.write( 'v_'+str(h) + ';')
+                    f.write( str(previous_games[h]) + ';')
                 
-                hi=0
                 for player in home_players:
-                    hi +=1
                     for h in player:
-                        f.write('h_'+str(h)+'_'+ str(hi) + ';')
-                hi =0
+                        if(player[h] is None):
+                            print(h, 'player home')
+                        f.write( str(player[h]) + ';')
+
                 for player in visitor_players:
-                    hi+=1
                     for h in player:
-                        f.write('v_'+str(h)+'_'+ str(hi) + ';')
-                f.write( "win" + '\n')
-                
-            # Ecriture des données
-            for h in home_stats:
-                if(home_stats[h] is None):
-                    print(h,'home_stat')
-                f.write( str(home_stats[h]) + ';')
-                
-            for h in visitor_stats:
-                if(visitor_stats[h] is None):
-                    print(h, 'visitor stat')
-                f.write( str(visitor_stats[h]) + ';')
-            
-            for h in previous_games:
-                f.write( str(previous_games[h]) + ';')
-            
-            for player in home_players:
-                for h in player:
-                    if(player[h] is None):
-                        print(h, 'player home')
-                    f.write( str(player[h]) + ';')
+                        if(player[h] is None):
+                            print(h, 'visitor home')
+                        f.write( str(player[h]) + ';')
 
-            for player in visitor_players:
-                for h in player:
-                    if(player[h] is None):
-                        print(h, 'visitor home')
-                    f.write( str(player[h]) + ';')
-
-            f.write( str(game['winner']) + '\n')
-            indice += 1
+                f.write( str(game['winner']) + '\n')
+        indice += 1
             
     f.close()
 
@@ -188,7 +193,7 @@ def create_games_and_players_stats_csv_2(db,year):
 
 
 
-year = "2020"
+year = "2017"
 db = DB_Access(year)
 # get_games_with_stats(db)
 # games = db.get_games()

@@ -22,6 +22,9 @@ class DB_Access:
                 game['winner'] = 1
             else:
                 game['winner'] = 0
+                
+            game['home_win_probability'] = 1/(1 + pow(10., -(game['home_elo_before_game'] - game['visitor_elo_before_game'])/400))
+            
         return games
     
 
