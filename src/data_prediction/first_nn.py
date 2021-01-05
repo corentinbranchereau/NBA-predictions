@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 
 def main():
     # the data, split between train and test sets
-    df=pd.read_csv("games2017_v3.csv",header=0, sep=';')
+    df=pd.read_csv("bin/5/games2016.csv",header=0, sep=';')
     y = df.pop('win')
     X = df
     epoch = 30
@@ -23,7 +23,7 @@ def main():
     # y_test=df[2000:,1152]
 
     mean = 0
-    for i in range(0,50):
+    for i in range(0,20):
     # if(True):
         X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
         # print(i)
@@ -32,8 +32,8 @@ def main():
         mean += history_df['val_accuracy'][epoch-1] 
         print("val_accuracy: ", history_df['val_accuracy'][epoch-1] )
         # use Pandas native plot method
-        history_df.loc[1:, ['loss', 'val_loss']].plot()
-    print("mean accuracy: ", mean/50)
+        # history_df.loc[1:, ['loss', 'val_loss']].plot()
+    print("mean accuracy: ", mean/20)
 
     # plt.show()
 
@@ -94,7 +94,9 @@ def train_model_dataset_3(X_train, Y_train, X_test, Y_test, epoch):
                 metrics=['accuracy'])  # what to track
 
     history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=120, verbose=False)  # train the model
-    
+    history_df = pd.DataFrame(history.history)
+    if(history_df['val_accuracy'][epoch-1]>0.65):
+        model.save("model.h5")
     return history
 
 
@@ -116,7 +118,7 @@ def train_model_dataset_4(X_train, Y_train, X_test, Y_test, epoch):
                 metrics=['accuracy'])  # what to track
 
     history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=70, verbose=False)  # train the model
-    
+    model.save("model.h5")
     return history
 
     

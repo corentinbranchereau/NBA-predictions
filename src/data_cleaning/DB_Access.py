@@ -22,7 +22,7 @@ class DB_Access:
                 game['winner'] = 1
             else:
                 game['winner'] = 0
-                
+            
             game['home_win_probability'] = 1/(1 + pow(10., -(game['home_elo_before_game'] - game['visitor_elo_before_game'])/400))
             
         return games
@@ -476,84 +476,84 @@ class DB_Access:
                         "team_id":1,
                         # "stats":1,
                         "player_name" : "$stats.name",
-                        # "total": {  
-                        #     "$cond": [ { "$gte": [ 1, 0 ] }, 1, 0]
-                        # },
-                        # "mp":{  
-                        #     "$cond": [ { "$gte": [ "$stats.mp", 0 ] }, "$stats.mp", 0.0]
-                        # },
+                        "total": {  
+                            "$cond": [ { "$gte": [ 1, 0 ] }, 1, 0]
+                        },
+                        "mp":{  
+                            "$cond": [ { "$gte": [ "$stats.mp", 0 ] }, "$stats.mp", 0.0]
+                        },
                         "started":{  
                             "$cond": [ { "$gte": [ "$stats.started", 0 ] }, "$stats.started", 0.0]
                         },
-                        # "fg":{  
-                        #     "$cond": [ { "$gte": [ "$stats.fg", 0 ] }, "$stats.fg", 0.0]
-                        # },
-                        # "DidNotPlay": {  
-                        #     "$cond": [ {"$ifNull": ['$stats.reason', 0]}, 1.0, 0.0]
-                        # },
-                        # "fga": {  
-                        #     "$cond": [ { "$gte": [ "$stats.fga", 0 ] }, "$stats.fga", 0.0]
-                        # },
+                        "fg":{  
+                            "$cond": [ { "$gte": [ "$stats.fg", 0 ] }, "$stats.fg", 0.0]
+                        },
+                        "DidNotPlay": {  
+                            "$cond": [ {"$ifNull": ['$stats.reason', 0]}, 1.0, 0.0]
+                        },
+                        "fga": {  
+                            "$cond": [ { "$gte": [ "$stats.fga", 0 ] }, "$stats.fga", 0.0]
+                        },
                  
-                        # "fg_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.fg_pct", 0 ] }, "$stats.fg_pct", 0.0]
-                        # },
+                        "fg_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.fg_pct", 0 ] }, "$stats.fg_pct", 0.0]
+                        },
                         
-                        # "fg3":{  
-                        #     "$cond": [ { "$gte": [ "$stats.fg3", 0 ] }, "$stats.fg3", 0.0]
-                        # },
+                        "fg3":{  
+                            "$cond": [ { "$gte": [ "$stats.fg3", 0 ] }, "$stats.fg3", 0.0]
+                        },
                     
-                        # "fg3a":{  
-                        #     "$cond": [ { "$gte": [ "$stats.fg3a", 0 ] }, "$stats.fg3a", 0.0]
-                        # },
+                        "fg3a":{  
+                            "$cond": [ { "$gte": [ "$stats.fg3a", 0 ] }, "$stats.fg3a", 0.0]
+                        },
 
-                        # "fg3_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.fg3_pct", 0 ] }, "$stats.fg3_pct", 0.0]
-                        # },
+                        "fg3_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.fg3_pct", 0 ] }, "$stats.fg3_pct", 0.0]
+                        },
 
-                        # "ft":{  
-                        #     "$cond": [ { "$gte": [ "$stats.ft", 0 ] }, "$stats.ft", 0.0]
-                        # },
+                        "ft":{  
+                            "$cond": [ { "$gte": [ "$stats.ft", 0 ] }, "$stats.ft", 0.0]
+                        },
 
-                        # "fta":{  
-                        #     "$cond": [ { "$gte": [ "$stats.fta", 0 ] }, "$stats.fta", 0.0]
-                        # },
+                        "fta":{  
+                            "$cond": [ { "$gte": [ "$stats.fta", 0 ] }, "$stats.fta", 0.0]
+                        },
 
-                        # "ft_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.ft_pct", 0 ] }, "$stats.ft_pct", 0.0]
-                        # },
+                        "ft_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.ft_pct", 0 ] }, "$stats.ft_pct", 0.0]
+                        },
 
-                        # "orb":{  
-                        #     "$cond": [ { "$gte": [ "$stats.orb", 0 ] }, "$stats.orb", 0.0]
-                        # },
+                        "orb":{  
+                            "$cond": [ { "$gte": [ "$stats.orb", 0 ] }, "$stats.orb", 0.0]
+                        },
 
-                        # "drb":{  
-                        #     "$cond": [ { "$gte": [ "$stats.drb", 0 ] }, "$stats.drb", 0.0]
-                        # },
+                        "drb":{  
+                            "$cond": [ { "$gte": [ "$stats.drb", 0 ] }, "$stats.drb", 0.0]
+                        },
 
-                        # "trb":{  
-                        #     "$cond": [ { "$gte": [ "$stats.trb", 0 ] }, "$stats.trb", 0.0]
-                        # },
+                        "trb":{  
+                            "$cond": [ { "$gte": [ "$stats.trb", 0 ] }, "$stats.trb", 0.0]
+                        },
 
-                        # "ast":{  
-                        #     "$cond": [ { "$gte": [ "$stats.ast", 0 ] }, "$stats.ast", 0.0]
-                        # },
+                        "ast":{  
+                            "$cond": [ { "$gte": [ "$stats.ast", 0 ] }, "$stats.ast", 0.0]
+                        },
 
-                        # "stl":{  
-                        #     "$cond": [ { "$gte": [ "$stats.stl", 0 ] }, "$stats.stl", 0.0]
-                        # },
+                        "stl":{  
+                            "$cond": [ { "$gte": [ "$stats.stl", 0 ] }, "$stats.stl", 0.0]
+                        },
 
-                        # "blk":{  
-                        #     "$cond": [ { "$gte": [ "$stats.blk", 0 ] }, "$stats.blk", 0.0]
-                        # },
+                        "blk":{  
+                            "$cond": [ { "$gte": [ "$stats.blk", 0 ] }, "$stats.blk", 0.0]
+                        },
 
-                        # "tov":{  
-                        #     "$cond": [ { "$gte": [ "$stats.tov", 0 ] }, "$stats.tov", 0.0]
-                        # },
+                        "tov":{  
+                            "$cond": [ { "$gte": [ "$stats.tov", 0 ] }, "$stats.tov", 0.0]
+                        },
 
-                        # "pf":{  
-                        #     "$cond": [ { "$gte": [ "$stats.pf", 0 ] }, "$stats.pf", 0.0]
-                        # },
+                        "pf":{  
+                            "$cond": [ { "$gte": [ "$stats.pf", 0 ] }, "$stats.pf", 0.0]
+                        },
 
                         "pts":{  
                             "$cond": [ { "$gte": [ "$stats.pts", 0 ] }, "$stats.pts", 0.0]
@@ -569,61 +569,61 @@ class DB_Access:
 
                              },
 
-                        # "ts_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.ts_pct", 0 ] }, "$stats.ts_pct", 0.0]
-                        # },
+                        "ts_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.ts_pct", 0 ] }, "$stats.ts_pct", 0.0]
+                        },
 
-                        # "efg_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.efg_pct", 0 ] }, "$stats.efg_pct", 0.0]
-                        # },
+                        "efg_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.efg_pct", 0 ] }, "$stats.efg_pct", 0.0]
+                        },
 
-                        # "fg3a_per_fga_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.fg3a_per_fga_pct", 0 ] }, "$stats.fg3a_per_fga_pct", 0.0]
-                        # },
+                        "fg3a_per_fga_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.fg3a_per_fga_pct", 0 ] }, "$stats.fg3a_per_fga_pct", 0.0]
+                        },
 
-                        # "fta_per_fga_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.fta_per_fga_pct", 0 ] }, "$stats.fta_per_fga_pct", 0.0]
-                        # },
+                        "fta_per_fga_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.fta_per_fga_pct", 0 ] }, "$stats.fta_per_fga_pct", 0.0]
+                        },
 
-                        # "orb_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.orb_pct", 0 ] }, "$stats.orb_pct", 0.0]
-                        # },
+                        "orb_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.orb_pct", 0 ] }, "$stats.orb_pct", 0.0]
+                        },
 
-                        # "drb_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.drb_pct", 0 ] }, "$stats.drb_pct", 0.0]
-                        # },
+                        "drb_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.drb_pct", 0 ] }, "$stats.drb_pct", 0.0]
+                        },
 
-                        # "trb_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.trb_pct", 0 ] }, "$stats.trb_pct", 0.0]
-                        # },
+                        "trb_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.trb_pct", 0 ] }, "$stats.trb_pct", 0.0]
+                        },
 
-                        # "ast_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.ast_pct", 0 ] }, "$stats.ast_pct", 0.0]
-                        # },
+                        "ast_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.ast_pct", 0 ] }, "$stats.ast_pct", 0.0]
+                        },
 
-                        # "stl_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.stl_pct", 0 ] }, "$stats.stl_pct", 0.0]
-                        # },
+                        "stl_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.stl_pct", 0 ] }, "$stats.stl_pct", 0.0]
+                        },
 
-                        # "blk_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.blk_pct", 0 ] }, "$stats.blk_pct", 0.0]
-                        # },
+                        "blk_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.blk_pct", 0 ] }, "$stats.blk_pct", 0.0]
+                        },
 
-                        # "tov_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.tov_pct", 0 ] }, "$stats.tov_pct", 0.0]
-                        # },
+                        "tov_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.tov_pct", 0 ] }, "$stats.tov_pct", 0.0]
+                        },
 
-                        # "usg_pct":{  
-                        #     "$cond": [ { "$gte": [ "$stats.usg_pct", 0 ] }, "$stats.usg_pct", 0.0]
-                        # },
+                        "usg_pct":{  
+                            "$cond": [ { "$gte": [ "$stats.usg_pct", 0 ] }, "$stats.usg_pct", 0.0]
+                        },
 
-                        # "off_rtg":{  
-                        #     "$cond": [ { "$gte": [ "$stats.off_pct", 0 ] }, "$stats.off_pct", 0.0]
-                        # },
+                        "off_rtg":{  
+                            "$cond": [ { "$gte": [ "$stats.off_pct", 0 ] }, "$stats.off_pct", 0.0]
+                        },
 
-                        # "def_rtg":{  
-                        #     "$cond": [ { "$gte": [ "$stats.def_rtg", 0 ] }, "$stats.def_rtg", 0.0]
-                        # },
+                        "def_rtg":{  
+                            "$cond": [ { "$gte": [ "$stats.def_rtg", 0 ] }, "$stats.def_rtg", 0.0]
+                        },
 
                         "bpm": {
                             "$convert":
@@ -643,79 +643,79 @@ class DB_Access:
 
                         "player_id" : {"$first": "$player_id"},
 
-                        # "games_total":  {'$sum':'$total'},
+                        "games_total":  {'$sum':'$total'},
 
-                        # "games_not_played" : {"$sum":"$DidNotPlay"},
+                        "games_not_played" : {"$sum":"$DidNotPlay"},
 
-                        # "mp" :  {"$avg":"$mp"},
+                        "mp" :  {"$avg":"$mp"},
 
                         "started" :  {"$avg":"$started"},
 
-                        # "fg" :  {"$avg":"$fg"},
+                        "fg" :  {"$avg":"$fg"},
 
-                        # "fga": {"$avg":"$fga"},
+                        "fga": {"$avg":"$fga"},
                  
-                        # "fg_pct":{"$avg":"$fg_pct"},
+                        "fg_pct":{"$avg":"$fg_pct"},
                         
-                        # "fg3":{"$avg":"$fg3"},
+                        "fg3":{"$avg":"$fg3"},
                     
-                        # "fg3a":{"$avg":"$fg3a"},
+                        "fg3a":{"$avg":"$fg3a"},
 
-                        # "fg3_pct":{"$avg":"$fg3_pct"},
+                        "fg3_pct":{"$avg":"$fg3_pct"},
 
-                        # "ft":{"$avg":"$ft"},
+                        "ft":{"$avg":"$ft"},
 
-                        # "fta":{"$avg":"$fta"},
+                        "fta":{"$avg":"$fta"},
 
-                        # # "ft_pct":{"$avg":"$ft_pct"},
+                        "ft_pct":{"$avg":"$ft_pct"},
 
-                        # "orb":{"$avg":"$orb"},
+                        "orb":{"$avg":"$orb"},
 
-                        # "drb":{"$avg":"$drb"},
+                        "drb":{"$avg":"$drb"},
 
-                        # "trb":{"$avg":"$trb"},
+                        "trb":{"$avg":"$trb"},
 
-                        # "ast":{"$avg":"$ast"},
+                        "ast":{"$avg":"$ast"},
 
-                        # "stl":{"$avg":"$stl"},
+                        "stl":{"$avg":"$stl"},
 
-                        # "blk":{"$avg":"$blk"},
+                        "blk":{"$avg":"$blk"},
 
-                        # "tov":{"$avg":"$tov"},
+                        "tov":{"$avg":"$tov"},
 
-                        # "pf":{"$avg":"$pf"},
+                        "pf":{"$avg":"$pf"},
 
                         "pts":{"$avg":"$pts"},
 
                         "plus_minus":{"$avg":"$plus_minus"},
 
-                        # "ts_pct":{"$avg":"$ts_pct"},
+                        "ts_pct":{"$avg":"$ts_pct"},
 
-                        # "efg_pct":{"$avg":"$efg_pct"},
+                        "efg_pct":{"$avg":"$efg_pct"},
 
-                        # "fg3a_per_fga_pct":{"$avg":"$fg3a_per_fga_pct"},
+                        "fg3a_per_fga_pct":{"$avg":"$fg3a_per_fga_pct"},
 
-                        # "fta_per_fga_pct":{"$avg":"$fta_per_fga_pct"},
+                        "fta_per_fga_pct":{"$avg":"$fta_per_fga_pct"},
 
-                        # "orb_pct":{"$avg":"$orb_pct"},
+                        "orb_pct":{"$avg":"$orb_pct"},
 
-                        # "drb_pct":{"$avg":"$drb_pct"},
+                        "drb_pct":{"$avg":"$drb_pct"},
 
-                        # "trb_pct":{"$avg":"$trb_pct"},
+                        "trb_pct":{"$avg":"$trb_pct"},
 
-                        # "ast_pct":{"$avg":"$ast_pct"},
+                        "ast_pct":{"$avg":"$ast_pct"},
 
-                        # "stl_pct":{"$avg":"$stl_pct"},
+                        "stl_pct":{"$avg":"$stl_pct"},
 
-                        # "blk_pct":{"$avg":"$blk_pct"},
+                        "blk_pct":{"$avg":"$blk_pct"},
 
-                        # "tov_pct":{"$avg":"$tov_pct"},
+                        "tov_pct":{"$avg":"$tov_pct"},
 
-                        # "usg_pct":{"$avg":"$usg_pct"},
+                        "usg_pct":{"$avg":"$usg_pct"},
 
-                        # "off_rtg":{"$avg":"$off_rtg"},
+                        "off_rtg":{"$avg":"$off_rtg"},
 
-                        # "def_rtg":{"$avg":"$def_rtg"},
+                        "def_rtg":{"$avg":"$def_rtg"},
 
                         "bpm":{"$avg":"$bpm"},
                     },
@@ -736,17 +736,58 @@ class DB_Access:
     def get_players_grades_aggregate(self, team_id, game_date, game_id):
         players = self.get_players_grades( team_id, game_date, game_id )
         injured = self.get_players_injured(team_id, game_id)
+
+
         for player in players:
-            player['injured'] = 0.01
-            for p in injured:
-                if(p['player_id'] == player['player_id']):
-                    player['injured'] = 0.99
+            # player['injured'] = 0.01
+            # for p in injured:
+            #     if(p['player_id'] == player['player_id']):
+            #         player['injured'] = 0.99
             player.pop('_id',None)
             player.pop('player_id',None)
-            player.pop('starting',None)
+            player.pop('games_total',None)
+            player.pop('games_not_played',None)
+            # player.pop('starting',None)
             player.pop('started',None)
      
-        return players
+        top5_average = {
+                        "mp" :0, "fg" :0,"fga":0, "fg_pct":0, "fg3":0,"fg3a":0,"fg3_pct":0,"ft":0,"fta":0,"ft_pct":0,"orb":0,"drb":0,"trb":0,"ast":0,"stl":0,"blk":0,"tov":0,"pf":0,"pts":0,"plus_minus":0,"ts_pct":0,"efg_pct":0,"fg3a_per_fga_pct":0,"fta_per_fga_pct":0,"orb_pct":0,"drb_pct":0,"trb_pct":0,"ast_pct":0,"stl_pct":0,"blk_pct":0,"tov_pct":0,"usg_pct":0,"off_rtg":0,"def_rtg":0,"bpm":0,
+                  }
+        top5_sum = {
+                        "mp" :0, "fg" :0,"fga":0, "fg_pct":0, "fg3":0,"fg3a":0,"fg3_pct":0,"ft":0,"fta":0,"ft_pct":0,"orb":0,"drb":0,"trb":0,"ast":0,"stl":0,"blk":0,"tov":0,"pf":0,"pts":0,"plus_minus":0,"ts_pct":0,"efg_pct":0,"fg3a_per_fga_pct":0,"fta_per_fga_pct":0,"orb_pct":0,"drb_pct":0,"trb_pct":0,"ast_pct":0,"stl_pct":0,"blk_pct":0,"tov_pct":0,"usg_pct":0,"off_rtg":0,"def_rtg":0,"bpm":0,
+                  }
+        out_average = {
+                        "mp" :0, "fg" :0,"fga":0, "fg_pct":0, "fg3":0,"fg3a":0,"fg3_pct":0,"ft":0,"fta":0,"ft_pct":0,"orb":0,"drb":0,"trb":0,"ast":0,"stl":0,"blk":0,"tov":0,"pf":0,"pts":0,"plus_minus":0,"ts_pct":0,"efg_pct":0,"fg3a_per_fga_pct":0,"fta_per_fga_pct":0,"orb_pct":0,"drb_pct":0,"trb_pct":0,"ast_pct":0,"stl_pct":0,"blk_pct":0,"tov_pct":0,"usg_pct":0,"off_rtg":0,"def_rtg":0,"bpm":0,
+                  }
+        out_sum = {
+                        "mp" :0, "fg" :0,"fga":0, "fg_pct":0, "fg3":0,"fg3a":0,"fg3_pct":0,"ft":0,"fta":0,"ft_pct":0,"orb":0,"drb":0,"trb":0,"ast":0,"stl":0,"blk":0,"tov":0,"pf":0,"pts":0,"plus_minus":0,"ts_pct":0,"efg_pct":0,"fg3a_per_fga_pct":0,"fta_per_fga_pct":0,"orb_pct":0,"drb_pct":0,"trb_pct":0,"ast_pct":0,"stl_pct":0,"blk_pct":0,"tov_pct":0,"usg_pct":0,"off_rtg":0,"def_rtg":0,"bpm":0,
+                  }
+
+        for player in players:
+            # print(player)
+            if(player['starting'] == 1):
+                player.pop("starting", None)
+                for stat in player: 
+                    if(player[stat] != None):
+                        top5_average[stat] += player[stat]
+                        top5_sum[stat] += 1
+
+            else:
+                player.pop("starting", None)
+                for stat in player: 
+                    if(player[stat] != None):
+                        out_average[stat] += player[stat]
+                        out_sum[stat] += 1
+        if(players != None):
+            for stat in top5_average:
+                if(top5_sum[stat] != 0):
+                    top5_average[stat] = top5_average[stat] / top5_sum[stat]
+            
+            for stat in out_average:
+                if(out_sum[stat] != 0):
+                    out_average[stat] = out_average[stat] / out_sum[stat]
+
+        return (top5_average, out_average)
 
 
 

@@ -97,14 +97,13 @@ def create_games_and_players_stats_csv(db):
             
     f.close()
 
-
 def create_games_and_players_stats_csv_2(db,year):
     print("getting games")
     games = db.get_games()
     indice = 0
     f = open("games"+year+".csv", 'a')
     for game in games:
-        if(indice > 786):
+        # if(indice > 786):
             print(indice)
             home_team = db.get_team(game['home_nick'])
             visitor_team = db.get_team(game['visitor_nick'])
@@ -184,7 +183,79 @@ def create_games_and_players_stats_csv_2(db,year):
                         f.write( str(player[h]) + ';')
 
                 f.write( str(game['winner']) + '\n')
-        indice += 1
+                indice += 1
+            
+    f.close()
+
+def create_games_and_players_stats_average_csv(db, year):
+    print("getting games")
+    games = db.get_games()
+    indice = 0
+    f = open("games"+year+".csv", 'w')
+    for game in games:
+            print(indice)
+            home_team = db.get_team(game['home_nick'])
+            visitor_team = db.get_team(game['visitor_nick'])
+
+            home_stats = db.get_team_stats_aggregate_before_game(game['home_nick'], game['date'])
+            visitor_stats  = db.get_team_stats_aggregate_before_game(game['visitor_nick'], game['date'])
+
+            home_players, home_bench_players = db.get_players_grades_aggregate(home_team['_id'], game['date'], game['_id'])
+            visitor_players, visitor_bench_players = db.get_players_grades_aggregate(visitor_team['_id'], game['date'], game['_id'])
+            
+
+            previous_games = db.get_same_game_previous_stats(game['date'],game['home_nick'], game['visitor_nick'])
+                      
+            if(home_stats is not None) & (visitor_stats is not None) & (home_players is not None) & (visitor_players is not None):
+                
+                total_game_stats = {}
+                for stat in home_stats:
+                    total_game_stats[stat] = home_stats[stat] - visitor_stats[stat]
+                
+                total_players_stat = {}
+                for stat in home_players:
+                    total_players_stat[stat] = home_players[stat] - visitor_players[stat]
+
+                total_players_bench_stat = {}
+                for stat in home_bench_players:
+                    total_players_bench_stat[stat] = home_bench_players[stat] - visitor_bench_players[stat]
+                
+                #Ecriture des entêtes
+                if(indice == 0):
+                    f.write('home_elo_probability' + ';')
+
+                    for h in total_game_stats:
+                        f.write( 'h-v_'+str(h) + ';')
+
+                    for h in previous_games:
+                        f.write( 'prev_'+str(h) + ';')
+
+                    for h in total_players_stat:
+                        f.write( 'h-v-5_'+str(h) + ';')
+                    
+                    for h in total_players_bench_stat:
+                        f.write( 'h-v-bench_'+str(h) + ';')
+                  
+                    f.write( "win" + '\n')
+                    
+                # Ecriture des données
+                f.write( str(game['home_win_probability']) + ';')
+
+                for h in total_game_stats:
+                    f.write( str(total_game_stats[h]) + ';')
+                    
+                for h in previous_games:
+                    f.write( str(previous_games[h]) + ';')
+                
+                
+                for h in total_players_stat:
+                    f.write( str(total_players_stat[h]) + ';')
+               
+                for h in total_players_bench_stat:
+                    f.write( str(total_players_bench_stat[h]) + ';')
+
+                f.write( str(game['winner']) + '\n')
+                indice += 1
             
     f.close()
 
@@ -192,13 +263,12 @@ def create_games_and_players_stats_csv_2(db,year):
 
 
 
-
-year = "2017"
+year = "2016"
 db = DB_Access(year)
 # get_games_with_stats(db)
 # games = db.get_games()
 # team = db.get_team(games[10]['home_nick'])
 # res = db.get_players_stats_before_game(team['_id'],games[10]['date'], games[10]['_id'] )
-create_games_and_players_stats_csv_2(db,year)
+create_games_and_players_stats_average_csv(db,year)
 
 
