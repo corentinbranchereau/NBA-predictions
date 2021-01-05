@@ -64,7 +64,7 @@ def train_model_dataset_2(X_train, Y_train, X_test, Y_test, epoch = 10):
                 metrics=['accuracy'])  # what to track
 
     history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=60)  # train the model
-    model.save("model.h5")
+    model.save("model/model.h5")
     return history
 
 #model that best  fits 3rd data scrapping 
@@ -87,7 +87,7 @@ def train_model_dataset_3(X_train, Y_train, X_test, Y_test, epoch = 10):
 
     history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=120, verbose=False)  # train the model
     history_df = pd.DataFrame(history.history)
-    model.save("model.h5")
+    model.save("model/model.h5")
 
     return history
 
@@ -110,7 +110,7 @@ def train_model_dataset_4(X_train, Y_train, X_test, Y_test, epoch = 30):
                 metrics=['accuracy'])  # what to track
 
     history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=70, verbose=False)  # train the model
-    model.save("model.h5")
+    model.save("model/neural-network_5.h5")
     return history
 
     
