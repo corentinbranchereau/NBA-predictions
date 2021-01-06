@@ -4,11 +4,11 @@ from sklearn import metrics
 import pandas as pd
 import pickle
 
-df=pd.read_csv("bin/5/games16-17.csv",header=0, sep=';')
+df=pd.read_csv("bin/6/games16-17-18.csv",header=0, sep=';')
 y = df.pop('win')
 X = df
 mean = 0
-nb_repetition = 10
+nb_repetition = 100
 for i in range(0,nb_repetition):
     # Split dataset into training set and test set
     X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2)
@@ -20,7 +20,7 @@ for i in range(0,nb_repetition):
 
     #Predict the response for test dataset
     y_pred = gnb.predict(X_test)
-    pickle.dump(gnb, open('model/naive_bayes_5.model', 'wb'))
+    pickle.dump(gnb, open('model/6/naive_bayes.model', 'wb'))
 
     print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
     mean += metrics.accuracy_score(y_test, y_pred)

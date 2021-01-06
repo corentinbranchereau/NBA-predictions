@@ -5,7 +5,57 @@ import matplotlib.pyplot as plt
 import pickle
 
 
-def predict_from_sklearn(model, data):
+def main():
+    ##LOADING DATA
+    csv_data = "bin/5/games2019_with_odds.csv"
+    df=pd.read_csv(csv_data,header=0, sep=';')
+    y = df.pop('win')
+    home_odd = df.pop('home_odd')
+    visitor_odd = df.pop('visitor_odd')
+    X = df
+
+    ##LOADING MODELS
+    k_near = pickle.load(open("model/k-nearest_5.model", 'rb'))
+    l_regression = pickle.load(open("model/logisitic-regression_5.model", 'rb'))
+    n_bayes = pickle.load(open("model/naive_bayes_5.model", 'rb'))
+    svm = pickle.load(open("model/svm_5.model", 'rb'))
+    n_network = load_model("model/neural-network_5_bis.h5")
+    n_network.compile(optimizer='adam',loss='binary_crossentropy', metrics=['accuracy'])
+
+    
+
+    summ = 0
+    
+    for index, row in X.iterrows():
+        
+        a = predict_from_model(k_near,[row])
+        b = predict_from_model(l_regression,[row])
+        c = predict_from_model(svm,[row])
+        d = predict_from_model(n_bayes,[row])
+        e = predict_from_model(n_network,np.array([row]))[0]
+
+        
+        if(e >= 0.7) & (a+b+c+d >=2):
+            summ -= 1
+            if(y[index] == 1):
+                summ += home_odd[index]
+        if(e < 0.3) & (a+b+c+d <=2):
+            summ -= 1
+            if(y[index] == 0):
+                summ += visitor_odd[index]
+        print(summ)
+    print("final: ",summ)
+
+
+
+
+
+def predict_from_model(model, data):
+    result = model.predict(data) 
+    return result[0]
+
+
+def odds_from_sklearn(model, data):
     loaded_model = pickle.load(open(model, 'rb'))
     df=pd.read_csv(data,header=0, sep=';')
     y = df.pop('win')
@@ -26,7 +76,7 @@ def predict_from_sklearn(model, data):
     
     return summ
 
-def predict_from_neural_net(model,data):
+def odds_from_neural_net(model,data):
     model = load_model(model)
     df=pd.read_csv(data,header=0, sep=';')
     y = df.pop('win')
@@ -50,42 +100,9 @@ def predict_from_neural_net(model,data):
             if(y[index] == 0):
                 summ += visitor_odd[index]
     return summ
-        #history = model.predict(X)
-        # i = 0
-        # correct = 0
-        # sure = 0
-        # mistaken_sure = 0
-        # incorrect = 0
-        # diff = 0
-        # for h in history:
-        #     if(h[0] < 0.5) & (y[i] == 0):
-        #         correct +=1
-        #         if(h[0] < 0.2):
-        #             sure +=1
-        #     if(h[0] >= 0.5) & (y[i] == 1):
-        #         correct +=1
-        #         if(h[0] > 0.8):
-        #             sure +=1
-        #     else:
-        #         diff += abs(h[0] -0.5)
-        #         incorrect +=1
-        #         if(h[0] <0.2) | (h[0] > 0.8):
-        #             mistaken_sure +=1
-        #     i +=1
-    # print(correct/(correct + incorrect), sure/(sure + mistaken_sure), sure, diff/incorrect)
-    # return (correct/(correct + incorrect))
 
 
-csv_data = "games2019.csv"
-nn = predict_from_neural_net("model/neural-network_5_bis.h5", csv_data)
-# lr = predict_from_sklearn("model/logisitic-regression_5.model", csv_data)
-# nb = predict_from_sklearn("model/naive_bayes_5.model", csv_data)
-# kn = predict_from_sklearn("model/k-nearest_5.model", csv_data)
-# svm = predict_from_sklearn("model/svm_5.model", csv_data)
 
-print("neural network: ", nn)
-# print("logistic regression: ", lr)
-# print("naive bayes: ", nb)
-# print("k nearest: ", kn)
-# print("svm: ", svm)
+
+main()
 

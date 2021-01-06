@@ -193,7 +193,6 @@ def create_games_and_players_stats_average_csv(db, year):
     indice = 0
     f = open("games"+year+".csv", 'a')
     for game in games:
-        if(indice > 625):
             print(indice)
             home_team = db.get_team(game['home_nick'])
             visitor_team = db.get_team(game['visitor_nick'])
@@ -269,7 +268,7 @@ def create_games_and_players_stats_average_csv(db, year):
                     f.write( str(total_players_bench_stat[h]) + ';')
 
                 f.write( str(game['winner']) + '\n')
-        indice += 1
+                indice += 1
             
     f.close()
 
@@ -277,7 +276,7 @@ def create_games_and_players_stats_average_csv(db, year):
 
 
 
-year = "2019"
+year = "2016"
 db = DB_Access(year)
 # get_games_with_stats(db)
 # games = db.get_games()
