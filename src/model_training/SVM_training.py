@@ -5,11 +5,11 @@ import pandas as pd
 import pickle
 
 
-df=pd.read_csv("bin/5/games2016.csv",header=0, sep=';')
+df=pd.read_csv("bin/5/games16-17.csv",header=0, sep=';')
 y = df.pop('win')
 X = df
 mean = 0
-nb_repetition = 100
+nb_repetition = 10
 for i in range(0,nb_repetition):
         # Split dataset into training set and test set
         X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2)

@@ -443,7 +443,7 @@ class DB_Access:
             players_id.append(player['player_id'])
 
         time_delta = datetime.timedelta(20)
-        minimum_date = game_date - time_delta;
+        minimum_date = game_date - time_delta
 
         items = self.table_player_stats.aggregate(pipeline = [
               {

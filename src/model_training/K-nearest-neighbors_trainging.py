@@ -4,7 +4,7 @@ from sklearn import metrics
 import pandas as pd
 import pickle
 
-df=pd.read_csv("bin/5/games2016.csv",header=0, sep=';')
+df=pd.read_csv("bin/5/games16-17.csv",header=0, sep=';')
 y = df.pop('win')
 X = df
 mean = 0
