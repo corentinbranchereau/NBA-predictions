@@ -9,17 +9,19 @@ from sklearn.model_selection import train_test_split
 
 def main():
     # the data, split between train and test sets
-    df=pd.read_csv("bin/6/games16-17-18.csv",header=0, sep=';')
+    df=pd.read_csv("bin/7/games16-17.csv",header=0, sep=';')
     y = df.pop('win')
+    df.pop('home_odd')
+    df.pop('visitor_odd')
     X = df
-    epoch = 20
+    epoch = 30
     repetition = 10
     mean = 0
     for i in range(0,repetition):
     # if(True):
-        X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
+        X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.02)
         # print(i)
-        history = train_model_dataset_6(X_train, y_train, X_test, y_test, epoch)
+        history = train_model_dataset_7(X_train, y_train, X_test, y_test, epoch)
         history_df = pd.DataFrame(history.history)
         mean += history_df['val_accuracy'][epoch-1] 
         print("val_accuracy: ", history_df['val_accuracy'][epoch-1] )
@@ -27,7 +29,7 @@ def main():
         history_df.loc[1:, ['loss', 'val_loss']].plot()
     print("mean accuracy: ", mean/repetition)
 
-    plt.show()
+    # plt.show()
 
 
 def clean_dataset(dataset):
@@ -113,7 +115,6 @@ def train_model_dataset_4(X_train, Y_train, X_test, Y_test, epoch = 30):
     model.save("model/neural-network_5.h5")
     return history
 
-
 def train_model_dataset_5(X_train, Y_train, X_test, Y_test, epoch = 15):
 
     model = tf.keras.models.Sequential()  # a basic feed-forward model
@@ -132,10 +133,10 @@ def train_model_dataset_5(X_train, Y_train, X_test, Y_test, epoch = 15):
                 metrics=['accuracy'])  # what to track
 
     history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=70, verbose=False)  # train the model
-    model.save("model/neural-network_5_bis.h5")
+    model.save("model/5/neural-network.h5")
     return history
 
-def train_model_dataset_6(X_train, Y_train, X_test, Y_test, epoch = 30):
+def train_model_dataset_6(X_train, Y_train, X_test, Y_test, epoch = 20):
 
     model = tf.keras.models.Sequential()  # a basic feed-forward model
     # model.add(tf.keras.layers.BatchNormalization())
@@ -153,7 +154,28 @@ def train_model_dataset_6(X_train, Y_train, X_test, Y_test, epoch = 30):
                 metrics=['accuracy'])  # what to track
 
     history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=140, verbose=False)  # train the model
-    model.save("model/6/neural-network.h5")
+    model.save("model/6/neural-network3.h5")
+    return history
+
+def train_model_dataset_7(X_train, Y_train, X_test, Y_test, epoch = 30):
+
+    model = tf.keras.models.Sequential()  # a basic feed-forward model
+    # model.add(tf.keras.layers.BatchNormalization())
+   
+    model.add(tf.keras.layers.Dense(32, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+    # model.add(tf.keras.layers.Dense(32, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+    model.add(tf.keras.layers.Dropout(rate=0.2))
+    model.add(tf.keras.layers.Dense(30, activation=tf.nn.relu))
+    # model.add(tf.keras.layers.Dropout(rate=0.05))
+    model.add(tf.keras.layers.Dense(16))
+    model.add(tf.keras.layers.Dense(1, activation=tf.nn.sigmoid))  # our output layer. 10 units for 10 classes. Softmax for probability distribution
+
+    model.compile(optimizer='adam',  # Good default optimizer to start with
+                loss='binary_crossentropy',  # how will we calculate our "error." Neural network aims to minimize loss.
+                metrics=['accuracy'])  # what to track
+
+    history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=140, verbose=False)  # train the model
+    model.save("model/7/neural-network.h5")
     return history
 
     

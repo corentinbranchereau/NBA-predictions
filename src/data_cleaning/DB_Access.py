@@ -405,6 +405,9 @@ class DB_Access:
             aggregate['avg_points'] = aggregate['avg_points'] / aggregate['nb_game'] 
             aggregate['avg_diff'] = aggregate['avg_diff'] / aggregate['nb_game']
             aggregate['win_avg'] = aggregate['nb_win'] / aggregate['nb_game']
+            aggregate.pop('nb_win')
+            aggregate.pop('nb_loose')
+            aggregate.pop('nb_game')
             return aggregate
         else:
             return None
@@ -786,6 +789,40 @@ class DB_Access:
             for stat in out_average:
                 if(out_sum[stat] != 0):
                     out_average[stat] = out_average[stat] / out_sum[stat]
+        
+        top5_average.pop('off_rtg', None)
+        top5_average.pop('pf', None)
+        top5_average.pop('tov_pct', None)
+        top5_average.pop('orb', None)
+        out_average.pop('ft', None)
+        out_average.pop('fta', None)
+        out_average.pop('drb', None)
+        out_average.pop('tov', None)
+        out_average.pop('trb', None)
+        out_average.pop('fga', None)
+        out_average.pop('pts', None)
+        out_average.pop('fg', None)
+        out_average.pop('orb', None)
+        out_average.pop('mp', None)
+        out_average.pop('ast', None)
+        out_average.pop('drb_pct', None)
+        out_average.pop('stl', None)
+        out_average.pop('ast_pct', None)
+        out_average.pop('pf', None)
+        out_average.pop('fg3a', None)
+        out_average.pop('usg_pct', None)
+        out_average.pop('trb_pct', None)
+        out_average.pop('blk', None)
+        out_average.pop('fta_per_fga_pct', None)
+        out_average.pop('orb_pct', None)
+        out_average.pop('fg3', None)
+        out_average.pop('bpm', None)
+        out_average.pop('tov_pct', None)
+        out_average.pop('stl_pct', None)
+        out_average.pop('ft_pct', None)
+        out_average.pop('orb_pct', None)
+        
+        
 
         return (top5_average, out_average)
 

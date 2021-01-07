@@ -1,4 +1,5 @@
 from keras.models import load_model
+import keras.backend as K
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,52 +8,64 @@ import pickle
 
 def main():
     ##LOADING DATA
-    csv_data = "bin/5/games2019_with_odds.csv"
+    bin_path = str("betting_1")
+    csv_data = "bin/7/games2020_with-preds.csv"
     df=pd.read_csv(csv_data,header=0, sep=';')
     y = df.pop('win')
-    home_odd = df.pop('home_odd')
-    visitor_odd = df.pop('visitor_odd')
+    home_odd = df['home_odd']
+    visitor_odd = df['visitor_odd']
     X = df
 
     ##LOADING MODELS
-    k_near = pickle.load(open("model/k-nearest_5.model", 'rb'))
-    l_regression = pickle.load(open("model/logisitic-regression_5.model", 'rb'))
-    n_bayes = pickle.load(open("model/naive_bayes_5.model", 'rb'))
-    svm = pickle.load(open("model/svm_5.model", 'rb'))
-    n_network = load_model("model/neural-network_5_bis.h5")
-    n_network.compile(optimizer='adam',loss='binary_crossentropy', metrics=['accuracy'])
+    # k_near = pickle.load(open("model/"+bin_path+"/k-nearest.model", 'rb'))
+    # l_regression = pickle.load(open("model/"+bin_path+"/logisitic-regression.model", 'rb'))
+    # n_bayes = pickle.load(open("model/"+bin_path+"/naive_bayes.model", 'rb'))
+    # svm = pickle.load(open("model/"+bin_path+"/svm.model", 'rb'))
+    # n_network = load_model("model/"+bin_path+"/neural-network.h5")
+    n_network = load_model("model/"+bin_path+"/odds_loss2.h5", compile=False)
+    # n_network.compile(optimizer='Nadam', loss=odds_loss)
 
     
 
     summ = 0
-    
+    games = 0
     for index, row in X.iterrows():
         
-        a = predict_from_model(k_near,[row])
-        b = predict_from_model(l_regression,[row])
-        c = predict_from_model(svm,[row])
-        d = predict_from_model(n_bayes,[row])
+        # a = predict_from_model(k_near,[row])
+        # b = predict_from_model(l_regression,[row])
+        # c = predict_from_model(svm,[row])
+        # d = predict_from_model(n_bayes,[row])
         e = predict_from_model(n_network,np.array([row]))[0]
-
-        
-        if(e >= 0.7) & (a+b+c+d >=2):
+        if(e[0] >0.95) :
             summ -= 1
+            games +=1
             if(y[index] == 1):
                 summ += home_odd[index]
-        if(e < 0.3) & (a+b+c+d <=2):
+        if(e[1] > 0.95) :
             summ -= 1
+            games += 1
             if(y[index] == 0):
                 summ += visitor_odd[index]
+        # if(e[0] > e[1]) & (e[0] >e[2]):
+        #     summ -= 1
+        #     games +=1
+        #     if(y[index] == 1):
+        #         summ += home_odd[index]
+        # if(e[1] > e[0]) & (e[1] >e[2]) :
+        #     summ -= 1
+        #     games += 1
+        #     if(y[index] == 0):
+        #         summ += visitor_odd[index]
         print(summ)
-    print("final: ",summ)
-
+        print(index)
+    print("final: ",summ, "games : ", games)
 
 
 
 
 def predict_from_model(model, data):
     result = model.predict(data) 
-    return result[0]
+    return result
 
 
 def odds_from_sklearn(model, data):
@@ -100,7 +113,6 @@ def odds_from_neural_net(model,data):
             if(y[index] == 0):
                 summ += visitor_odd[index]
     return summ
-
 
 
 

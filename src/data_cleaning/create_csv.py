@@ -223,8 +223,7 @@ def create_games_and_players_stats_average_csv(db, year):
                 #Ecriture des entêtes
                 if(indice == 0):
                     f.write('home_elo_probability' + ';')
-                    f.write('home_odd' + ';')
-                    f.write('visitor_odd' + ';')
+                    
                     for h in total_game_stats:
                         f.write( 'h-v_'+str(h) + ';')
 
@@ -236,23 +235,13 @@ def create_games_and_players_stats_average_csv(db, year):
                     
                     for h in total_players_bench_stat:
                         f.write( 'h-v-bench_'+str(h) + ';')
-                  
+
+                    f.write('home_odd' + ';')
+                    f.write('visitor_odd' + ';')
                     f.write( "win" + '\n')
                     
                 # Ecriture des données
-                f.write( str(game['home_win_probability']) + ';')
-                
-                try:
-                    f.write( str(game['home_odd']) + ';')
-                except Exception:
-                    print("e")
-                    f.write( '1;')
-                try:
-                    f.write( str(game['visitor_odd']) + ';')
-                except Exception:
-                    print("e")
-                    f.write('1;')
-                
+                f.write( str(game['home_win_probability']) + ';')            
 
                 for h in total_game_stats:
                     f.write( str(total_game_stats[h]) + ';')
@@ -267,6 +256,17 @@ def create_games_and_players_stats_average_csv(db, year):
                 for h in total_players_bench_stat:
                     f.write( str(total_players_bench_stat[h]) + ';')
 
+                try:
+                    f.write( str(game['home_odd']) + ';')
+                except Exception:
+                    print("e")
+                    f.write( '1;')
+                try:
+                    f.write( str(game['visitor_odd']) + ';')
+                except Exception:
+                    print("e")
+                    f.write('1;')
+
                 f.write( str(game['winner']) + '\n')
                 indice += 1
             
@@ -276,7 +276,7 @@ def create_games_and_players_stats_average_csv(db, year):
 
 
 
-year = "2016"
+year = "2020"
 db = DB_Access(year)
 # get_games_with_stats(db)
 # games = db.get_games()

@@ -52,13 +52,13 @@ def predict_from_neural_net(model,data):
     print(correct/(correct + incorrect), sure/(sure + mistaken_sure), sure, diff/incorrect)
     return (correct/(correct + incorrect))
 
-
-csv_data = "bin/6/games2019.csv"
-nn = predict_from_neural_net("model/6/neural-network.h5", csv_data)
-lr = predict_from_sklearn("model/6/logisitic-regression.model", csv_data)
-nb = predict_from_sklearn("model/6/naive_bayes.model", csv_data)
-kn = predict_from_sklearn("model/6/k-nearest.model", csv_data)
-svm = predict_from_sklearn("model/6/svm.model", csv_data)
+bin_path = "5"
+csv_data = "bin/5/games16-17.csv"
+nn = predict_from_neural_net("model/"+bin_path+"/neural-network.h5", csv_data)
+lr = predict_from_sklearn("model/"+bin_path+"/logisitic-regression.model", csv_data)
+nb = predict_from_sklearn("model/"+bin_path+"/naive_bayes.model", csv_data)
+kn = predict_from_sklearn("model/"+bin_path+"/k-nearest.model", csv_data)
+svm = predict_from_sklearn("model/"+bin_path+"/svm.model", csv_data)
 
 print("neural network: ", nn)
 print("logistic regression: ", lr)

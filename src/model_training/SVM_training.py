@@ -5,14 +5,16 @@ import pandas as pd
 import pickle
 
 
-df=pd.read_csv("bin/6/games16-17-18.csv",header=0, sep=';')
+df=pd.read_csv("bin/7/games16-17.csv",header=0, sep=';')
 y = df.pop('win')
+df.pop('home_odd')
+df.pop('visitor_odd')
 X = df
 mean = 0
 nb_repetition = 10
 for i in range(0,nb_repetition):
         # Split dataset into training set and test set
-        X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2)
+        X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.02)
         #Create a Gaussian Classifier
         model = svm.SVC(decision_function_shape='ovr')
 
@@ -21,7 +23,7 @@ for i in range(0,nb_repetition):
 
         #Predict the response for test dataset
         y_pred = model.predict(X_test)
-        pickle.dump(model, open('model/6/svm.model', 'wb'))
+        pickle.dump(model, open('model/7/svm.model', 'wb'))
 
         print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
         mean += metrics.accuracy_score(y_test, y_pred)
