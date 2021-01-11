@@ -1,7 +1,7 @@
 # NBA Predictions
 
 This project aims to build a betting model that earns money. I used Python (Keras, Tensorflow, Scikit learn, Pandas, Numpy), to create the pipeline and the models. 
-The system works in real time: you can see the day to day prediction, and the current balance on (my website)[http://deep-learning.corentinbranchereau.com/]
+The system works in real time: you can see the day to day prediction, and the current balance on [my website](http://deep-learning.corentinbranchereau.com/)
 
 ## Results 
 
