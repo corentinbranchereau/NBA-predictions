@@ -15,7 +15,7 @@ The system only bets on games where the confidence percentage is higher than 95%
 
 I tested this second neural network with data from season 2018-2019, and 2019-2020. 
 #### for 2018-2019 the total return on investment was -0.2% (i bet around 100€, and ended the season with 99.8€)
-#### for 2019-2020 the total return on investment was +2.6% (I bet around 100€, and ended the season with 102.6€)
+#### for 2019-2020 the total return on investment was +4.3% (I bet around 100€, and ended the season with 104.3€)
 
 
 The results could probably be improved with more data from past years, also by giving a weight to data according to the number of past games...
