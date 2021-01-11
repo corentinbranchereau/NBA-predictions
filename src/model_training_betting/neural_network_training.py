@@ -12,7 +12,7 @@ from sklearn.model_selection import train_test_split
 def main():
     X, y, outcome = get_data()
     epoch = 20
-    # SPLIT THE DATA IN TRAIN AND TEST DATASET.
+
     repetition = 30
     mean = 0
     for i in range(0,repetition):
