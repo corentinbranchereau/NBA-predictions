@@ -5,7 +5,7 @@ import pandas as pd
 
 
 
-date_year = 2021
+date_year = 2015
 client = MongoClient(os.environ["PREDICTIZ_CREDENTIALS"])
        
 db = client["season_" + str(date_year)]
@@ -46,9 +46,10 @@ team_dict = {
 "Milwaukee" :"MIL", 
 "Houston":"HOU",
 "GoldenState":"GSW",
+"NewJersey":"NJN",
 }
 
-data=pd.read_csv("bin/cotes/odds-21.csv",header=0, sep=';')
+data=pd.read_csv("bin/cotes/odds-15.csv",header=0, sep=';')
 i = 0
 for index, row in data.iterrows():
     if(row['ML'] < 0 ):
