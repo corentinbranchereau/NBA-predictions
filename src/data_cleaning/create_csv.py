@@ -282,6 +282,6 @@ for year in range(2012,2016):
     # games = db.get_games()
     # team = db.get_team(games[10]['home_nick'])
     # res = db.get_players_stats_before_game(team['_id'],games[10]['date'], games[10]['_id'] )
-    create_games_and_players_stats_average_csv(db,year)
+    create_games_and_players_stats_average_csv(db,str(year))
 
 
