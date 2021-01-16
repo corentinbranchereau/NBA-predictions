@@ -8,7 +8,7 @@ The system works in real time: you can see the day to day prediction, and the cu
 Finaly, after weeks of data cleaning and a couple of different deep learning models, I found a combination that seems to work quite well. I built three different models : a  Sequential Neural Network, a Support Vector Machine, and a Naive Bayes model, that take as input the stats from past games, and as an output the probability that the home team is going to win. 
 I trained this model with data from seasons 2015-2016 and 2016-2017. 
 
-Then,  I created a second Neural Network, that take as input the predictions from the first models, and the odds for each game. 
+Then,  I created a second Neural Network with a custom loss function, that take as input the predictions from the first models, and the odds for each game. 
 I trained this neural network with data from the season 2017-2018. (this season needs to be different that the first ones, to test the prediction on new data). 
 
 The system only bets on games where the confidence percentage is higher than 95% (about 10% of the games). Lower confidence percentage are not that accurate.
