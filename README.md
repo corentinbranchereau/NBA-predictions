@@ -16,6 +16,14 @@ The system only bets on games where the confidence percentage is higher than 95%
 I tested this second neural network with data from season 2018-2019, and 2019-2020. 
 
 
+## for 2019-2020 : +3.7% ROI
+the total return on investment was +3.7% (I bet 10€ on 450 games, and ended the season with +170€ in balance, 4670€ in total)
+
+### the total balance over the different games in 2020
+![season 2020](./images/2020.png)
+
+
+
 ## for 2018-2019 : -0.13% ROI
 the total return on investment was -0.13% (i bet 10€ on 735 games, and ended the season with -10€ in balance,  7340€ in total)
 
@@ -26,11 +34,6 @@ the total return on investment was -0.13% (i bet 10€ on 735 games, and ended t
 ### the same graph, with, in green, the strategy of betting on the lowest odd (ie : the highest chance to win) every game
 ![season 2019](./images/2019_with_bet.png)
 
-## for 2019-2020 : +3.7% ROI
-the total return on investment was +3.7% (I bet 10€ on 450 games, and ended the season with +170€ in balance, 4670€ in total)
-
-### the total balance over the different games in 2020
-![season 2020](./images/2020.png)
 
 The results could probably be improved with more data from past years, also by giving a weight to data according to the number of past games...
 In the future, I also want to try to predict game results by predicting how many points each player is going to score in a game.
