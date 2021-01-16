@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 
 def main():
     # the data, split between train and test sets
-    df=pd.read_csv("bin/7/games16-17.csv",header=0, sep=';')
+    df=pd.read_csv("bin/7/games12:15.csv",header=0, sep=';')
     y = df.pop('win')
     df.pop('home_odd')
     df.pop('visitor_odd')
@@ -29,7 +29,7 @@ def main():
         history_df.loc[1:, ['loss', 'val_loss']].plot()
     print("mean accuracy: ", mean/repetition)
 
-    # plt.show()
+    plt.show()
 
 
 def clean_dataset(dataset):
@@ -174,8 +174,8 @@ def train_model_dataset_7(X_train, Y_train, X_test, Y_test, epoch = 30):
                 loss='binary_crossentropy',  # how will we calculate our "error." Neural network aims to minimize loss.
                 metrics=['accuracy'])  # what to track
 
-    history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=140, verbose=False)  # train the model
-    model.save("model/7/neural-network.h5")
+    history = model.fit(X_train, Y_train,validation_data=(X_test, Y_test), epochs=epoch, batch_size=160, verbose=False)  # train the model
+    model.save("model/8/neural-network.h5")
     return history
 
     

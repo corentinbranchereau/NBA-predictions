@@ -1,9 +1,9 @@
 # NBA Predictions
 
 This project aims to build a betting model that earns money. I used Python (Keras, Tensorflow, Scikit learn, Pandas, Numpy), to create the pipeline and the models. 
-The system works in real time: you can see the day to day prediction, and the current balance on (my website)[http://deep-learning.corentinbranchereau.com/]
+The system works in real time: you can see the day to day prediction, and the current balance on (my website: deep-learning.corentinbranchereau.com)[http://deep-learning.corentinbranchereau.com/]
 
-## Results 
+# Results 
 
 Finaly, after weeks of data cleaning and a couple of different deep learning models, I found a combination that seems to work quite well. I built three different models : a  Sequential Neural Network, a Support Vector Machine, and a Naive Bayes model, that take as input the stats from past games, and as an output the probability that the home team is going to win. 
 I trained this model with data from seasons 2015-2016 and 2016-2017. 
@@ -14,15 +14,29 @@ I trained this neural network with data from the season 2017-2018. (this season 
 The system only bets on games where the confidence percentage is higher than 95% (about 10% of the games). Lower confidence percentage are not that accurate.
 
 I tested this second neural network with data from season 2018-2019, and 2019-2020. 
-#### for 2018-2019 the total return on investment was -0.2% (i bet around 100€, and ended the season with 99.8€)
-#### for 2019-2020 the total return on investment was +2.6% (I bet around 100€, and ended the season with 102.6€)
 
+
+## for 2018-2019 : -0.13% ROI
+the total return on investment was -0.13% (i bet 10€ on 735 games, and ended the season with -10€ in balance,  7340€ in total)
+
+### the total balance over the different games in 2019
+![season 2019](./images/2019.png)
+
+
+### the same graph, with, in green, the strategy of betting on the lowest odd (ie : the highest chance to win) every game
+![season 2019](./images/2019_with_bet.png)
+
+## for 2019-2020 : -+3.7% ROI
+the total return on investment was +3.7% (I bet 10€ on 450 games, and ended the season with +170€ in balance, 4670€ in total)
+
+### the total balance over the different games in 2020
+![season 2020](./images/2020.png)
 
 The results could probably be improved with more data from past years, also by giving a weight to data according to the number of past games...
 In the future, I also want to try to predict game results by predicting how many points each player is going to score in a game.
 
 
-## Thought Process and Notes
+# Thought Process and Notes
 
 I first scrapped NBA data from 2016 until today, from the website [Basketball-Reference](basketball-reference.com), and saved everything into a MongoDB database. 
 
@@ -72,7 +86,7 @@ h-v-5_trb
 h-v-5_fga : 0.15
 
 
-# Results(NN) (Average on 100 different models): 
+## Results(NN) (Average on 100 different models): 
 
 2017 - toutes les données: 0.625
 2016 - toutes les données: 0.660
@@ -85,7 +99,7 @@ We can see that cleaning the columns that are not relevant does not improve the 
 Network already assigns very low weight to those columns, so deleting them does not really change anything. 
 
 
-# Cleaned data results : 
+## Cleaned data results : 
   
 neural network:  0.5662317121391854 : 0.7694235588972431 307
 logistic regression:  0.6726479146459747
@@ -93,7 +107,7 @@ naive bayes:  0.646944713870029
 k nearest:  0.6862269641125122
 svm:  0.6813773035887488
 
-# not cleaned data results : 
+## not cleaned data results : 
 
 neural network:  0.6017777777777777 : 0.7911479944674965 572 
 logistic regression:  0.6711930164888458

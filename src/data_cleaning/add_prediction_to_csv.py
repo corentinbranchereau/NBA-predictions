@@ -7,8 +7,8 @@ import pickle
 
 def main():
     ##LOADING DATA
-    bin_path = str("7")
-    csv_data = "bin/7/games2020.csv"
+    bin_path = str("8")
+    csv_data = "bin/7/games16:18.csv"
     df=pd.read_csv(csv_data,header=0, sep=';')
     y = df.pop('win')
     home_odd = df.pop('home_odd')
@@ -63,7 +63,7 @@ def main():
     df['visitor_odd'] = visitor_odd
     df['win'] = y
     df.drop(df.columns[0], axis=1)
-    df.to_csv('games2020_with-preds.csv',sep=';')
+    df.to_csv('games16:18_with-preds.csv',sep=';')
 
 def predict_from_model(model, data):
     result = model.predict(data) 

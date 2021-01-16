@@ -13,40 +13,44 @@ def main():
     X, y, outcome = get_data()
     epoch = 20
 
-    repetition = 30
+    repetition = 10
     mean = 0
     for i in range(0,repetition):
         print(i)
         X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
-        model = get_model(54, 3, 30, 0.6, 0.0)
+        model = get_model(54, 3, 100, 0.6, 0.0)
         history = model.fit(X_train, y_train, validation_data=(X_test, y_test),
-                epochs=epoch, batch_size=50, callbacks=[EarlyStopping(patience=25),ModelCheckpoint('model/betting_1/odds_loss2.h5',save_best_only=True)], verbose=False)
+                epochs=epoch, batch_size=250, callbacks=[EarlyStopping(patience=25),ModelCheckpoint('model/betting_8/odds_loss.h5',save_best_only=True)], verbose=False)
 
         history_df = pd.DataFrame(history.history)
-        print("val_accuracy: ", history_df['val_loss'][epoch -1] )
-        mean += history_df['val_loss'][epoch -1]
-        # history_df.loc[1:, ['loss', 'val_loss']].plot()
+        print("val_accuracy: ", history_df['val_loss'] )
+        # print(model.weights)
+        mean += history_df['val_loss']
+        history_df.loc[1:, ['loss', 'val_loss']].plot()
     print("mean = ", mean/repetition)
-    # plt.show()
+    plt.show()
     # print('Training Loss : {}\nValidation Loss : {}'.format(model.evaluate(X_train, y_train), model.evaluate(X_test, y_test)))
 
 
 
 def get_data():
-    data=pd.read_csv("bin/7/games2018_with-preds.csv",header=0, sep=';')
+    data=pd.read_csv("bin/7/games16:18_with-preds.csv",header=0, sep=';')
     X = data.values[:,:-1]
     y = data.values[:, -1]
     y_full = np.zeros((X.shape[0], 5))
     for i, y_i in enumerate(y):
         if y_i == 1:
             y_full[i, 0] = 1.0
+            y_full[i, 1] = 0.01
         if y_i == 0:
+            y_full[i, 0] = 0.01
             y_full[i, 1] = 1.0
         
         y_full[i, 3] = X[i, -2] # ADD ODDS OF HOME TEAM
         y_full[i, 4] = X[i, -1] # ADD ODDS OF AWAY TEAM
 
     return X, y_full, y
+
 
 
 
@@ -61,7 +65,7 @@ def odds_loss(y_true, y_pred):
     gain_loss_vector = K.concatenate([
       home_win * (odds_a - 1) + (1 - home_win) * -1,
       visitor_win * (odds_b - 1) + (1 - visitor_win) * -1,
-      K.zeros_like(odds_a)
+      K.zeros_like(odds_a) + 0.1
     ], axis=1)
 
     return -1 * K.mean(K.sum(gain_loss_vector * y_pred, axis=1))
@@ -85,6 +89,5 @@ def get_model(input_dim, output_dim, base=1000, multiplier=0.25, p=0.2):
     model = Model(inputs=inputs, outputs=outputs)
     model.compile(optimizer='Nadam', loss=odds_loss)
     return model
-
 
 main()

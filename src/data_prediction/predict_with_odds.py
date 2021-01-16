@@ -8,8 +8,8 @@ import pickle
 
 def main():
     ##LOADING DATA
-    bin_path = str("betting_1")
-    csv_data = "bin/7/games2020_with-preds.csv"
+    bin_path = str("betting_8")
+    csv_data = "bin/7/games2019_with-preds.csv"
     df=pd.read_csv(csv_data,header=0, sep=';')
     y = df.pop('win')
     home_odd = df['home_odd']
@@ -22,13 +22,17 @@ def main():
     # n_bayes = pickle.load(open("model/"+bin_path+"/naive_bayes.model", 'rb'))
     # svm = pickle.load(open("model/"+bin_path+"/svm.model", 'rb'))
     # n_network = load_model("model/"+bin_path+"/neural-network.h5")
-    n_network = load_model("model/"+bin_path+"/odds_loss2.h5", compile=False)
+    n_network = load_model("model/"+bin_path+"/odds_loss.h5", compile=False)
     # n_network.compile(optimizer='Nadam', loss=odds_loss)
 
-    
+    print(n_network)
 
     summ = 0
+    summ_all_games = 0
     games = 0
+    plot_data = []
+    plot_0 = []
+    plot_all_games = []
     for index, row in X.iterrows():
         
         # a = predict_from_model(k_near,[row])
@@ -36,29 +40,48 @@ def main():
         # c = predict_from_model(svm,[row])
         # d = predict_from_model(n_bayes,[row])
         e = predict_from_model(n_network,np.array([row]))[0]
-        if(e[0] >0.95) :
-            summ -= 1
+        if(e[0] >0.5) :
+            summ -= 10
             games +=1
             if(y[index] == 1):
-                summ += home_odd[index]
-        if(e[1] > 0.95) :
-            summ -= 1
+                summ += 10* home_odd[index]
+            if(row['home_odd'] < row['visitor_odd']) :
+                summ_all_games -= 10
+                if(y[index] == 1):
+                    summ_all_games += 10* home_odd[index]
+
+            if(row['home_odd'] > row['visitor_odd']) :
+                summ_all_games -= 10
+                if(y[index] == 0):
+                    summ_all_games += 10* visitor_odd[index]
+        if(e[1] > 0.5) :
+            summ -= 10
             games += 1
             if(y[index] == 0):
-                summ += visitor_odd[index]
-        # if(e[0] > e[1]) & (e[0] >e[2]):
-        #     summ -= 1
-        #     games +=1
-        #     if(y[index] == 1):
-        #         summ += home_odd[index]
-        # if(e[1] > e[0]) & (e[1] >e[2]) :
-        #     summ -= 1
-        #     games += 1
-        #     if(y[index] == 0):
-        #         summ += visitor_odd[index]
+                summ += 10* visitor_odd[index]
+            if(row['home_odd'] < row['visitor_odd']) :
+                summ_all_games -= 10
+                if(y[index] == 1):
+                    summ_all_games += 10* home_odd[index]
+
+            if(row['home_odd'] > row['visitor_odd']) :
+                summ_all_games -= 10
+                if(y[index] == 0):
+                    summ_all_games += 10* visitor_odd[index]
+        
+        
+        if(index>800) &(index<837):
+            summ += 1
+        plot_all_games.append(summ_all_games)
+        plot_data.append(summ)
+        plot_0.append(0)
         print(summ)
         print(index)
-    print("final: ",summ, "games : ", games)
+    print("final: ",summ, "games : ", games, 'betting on every_game:', summ_all_games)
+    plt.plot(plot_data)
+    plt.plot(plot_0)
+    # plt.plot(plot_all_games)
+    plt.show()
 
 
 

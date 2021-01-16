@@ -4,7 +4,7 @@ from sklearn import metrics
 import pandas as pd
 import pickle
 
-df=pd.read_csv("bin/7/games16-17.csv",header=0, sep=';')
+df=pd.read_csv("bin/7/games12:15.csv",header=0, sep=';')
 y = df.pop('win')
 df.pop('home_odd')
 df.pop('visitor_odd')
@@ -22,7 +22,7 @@ for i in range(0,nb_repetition):
 
     #Predict the response for test dataset
     y_pred = model.predict(X_test)
-    pickle.dump(model, open('model/7/logisitic-regression.model', 'wb'))
+    pickle.dump(model, open('model/8/logisitic-regression.model', 'wb'))
 
     print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
     mean += metrics.accuracy_score(y_test, y_pred)
