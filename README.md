@@ -1,7 +1,7 @@
 # NBA Predictions
 
 This project aims to build a betting model that earns money. I used Python (Keras, Tensorflow, Scikit learn, Pandas, Numpy), to create the pipeline and the models. 
-The system works in real time: you can see the day to day prediction, and the current balance on (my website: deep-learning.corentinbranchereau.com)[http://deep-learning.corentinbranchereau.com/]
+The system works in real time: you can see the day to day prediction, and the current balance on [my website: http://deep-learning.corentinbranchereau.com/](http://deep-learning.corentinbranchereau.com/)
 
 # Results 
 
@@ -26,7 +26,7 @@ the total return on investment was -0.13% (i bet 10€ on 735 games, and ended t
 ### the same graph, with, in green, the strategy of betting on the lowest odd (ie : the highest chance to win) every game
 ![season 2019](./images/2019_with_bet.png)
 
-## for 2019-2020 : -+3.7% ROI
+## for 2019-2020 : +3.7% ROI
 the total return on investment was +3.7% (I bet 10€ on 450 games, and ended the season with +170€ in balance, 4670€ in total)
 
 ### the total balance over the different games in 2020
